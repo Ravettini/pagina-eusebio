@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Colores GCBA */
+    --gcba-yellow: #FFCC00;
+    --gcba-cyan: #8DE2D6;
+    --gcba-blue: #153244;
+    --gcba-gray: #3C3C3B;
+    --gcba-offwhite: #FCFCFC;
+
+    /* Variables de tema shadcn */
+    --background: 0 0% 98.8%;
+    --foreground: 180 5% 23%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 180 5% 23%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 180 5% 23%;
+
+    --primary: 200 60% 17%;
+    --primary-foreground: 48 100% 99%;
+
+    --secondary: 171 56% 71%;
+    --secondary-foreground: 200 60% 17%;
+
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+
+    --accent: 48 100% 50%;
+    --accent-foreground: 200 60% 17%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 200 60% 17%;
+
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-gcba-offwhite text-gcba-gray;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+
+
+

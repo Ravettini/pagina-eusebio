@@ -1,0 +1,20 @@
+email,nombre
+usuario.valido@example.com,Usuario Válido
+test@gmail.com,Email Corto (Whitelist)
+123456@gmail.com,Solo Números
+usuario@gmial.com,Typo en Gmail
+contacto@empresa.com,Correo de Rol
+usuario.normal@buenosaires.gob.ar,GCBA Válido (Whitelist)
+user@example.con,TLD Inválido
+valido123@hotmail.com,Usuario Válido 2 (Whitelist)
+info@company.com,Info Genérico
+normal.user@example.ar,Usuario Válido AR
+abc@test.com,Muy Corto
+usuario@example..com,Doble Punto
+usuario.valido@example.com,Duplicado
+test.user@yahoo.com,Usuario Válido Yahoo (Whitelist)
+ventas@empresa.com.ar,Ventas Rol
+usuario@outlook.com,Outlook Válido (Whitelist)
+contacto@live.com,Live Válido (Whitelist)
+
+

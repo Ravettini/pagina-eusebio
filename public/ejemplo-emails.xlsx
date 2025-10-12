@@ -1,0 +1,14 @@
+email,nombre
+usuario.valido@example.com,Usuario Válido
+test@gmail.com,Email Corto
+123456@gmail.com,Solo Números
+usuario@gmial.com,Typo en Gmail
+contacto@empresa.com,Correo de Rol
+usuario.normal@buenosaires.gob.ar,GCBA Válido
+user@example.con,TLD Inválido
+valido123@hotmail.com,Usuario Válido 2
+info@company.com,Info Genérico
+normal.user@example.ar,Usuario Válido AR
+
+
+
