@@ -30,13 +30,15 @@ interface ValidationResponse {
 }
 
 export async function POST(req: NextRequest) {
+  console.error("[VALIDATE] ===== INICIO DE VALIDACIÓN =====");
+  console.error("[VALIDATE] Timestamp:", new Date().toISOString());
+  
   try {
-    console.log("[VALIDATE] Inicio de validación");
     const formData = await req.formData();
-    console.log("[VALIDATE] FormData recibido");
+    console.error("[VALIDATE] FormData recibido");
     const file = formData.get("file") as File;
     const paramsStr = formData.get("params") as string;
-    console.log("[VALIDATE] Archivo:", file?.name, "Tamaño:", file?.size);
+    console.error("[VALIDATE] Archivo:", file?.name, "Tamaño:", file?.size);
 
     // Validar archivo
     if (!file) {
@@ -72,11 +74,11 @@ export async function POST(req: NextRequest) {
     const params: ValidationParams = paramsStr ? JSON.parse(paramsStr) : {};
 
     // Leer archivo
-    console.log("[VALIDATE] Leyendo archivo...");
+    console.error("[VALIDATE] Leyendo archivo...");
     const buffer = await file.arrayBuffer();
-    console.log("[VALIDATE] Buffer creado, tamaño:", buffer.byteLength);
+    console.error("[VALIDATE] Buffer creado, tamaño:", buffer.byteLength);
     const workbook = XLSX.read(buffer, { type: "array" });
-    console.log("[VALIDATE] Workbook leído, hojas:", workbook.SheetNames.length);
+    console.error("[VALIDATE] Workbook leído, hojas:", workbook.SheetNames.length);
 
     // Obtener la primera hoja
     const firstSheetName = workbook.SheetNames[0];
@@ -93,9 +95,9 @@ export async function POST(req: NextRequest) {
     }
 
     // Extraer emails
-    console.log("[VALIDATE] Extrayendo emails de", rawData.length, "filas");
+    console.error("[VALIDATE] Extrayendo emails de", rawData.length, "filas");
     const rawEmails = extractEmailColumn(rawData);
-    console.log("[VALIDATE] Emails extraídos:", rawEmails.length);
+    console.error("[VALIDATE] Emails extraídos:", rawEmails.length);
 
     if (rawEmails.length === 0) {
       return NextResponse.json(
@@ -167,7 +169,8 @@ export async function POST(req: NextRequest) {
       duplicatesRemoved,
     };
 
-    console.log("[VALIDATE] Validación completada. Válidos:", validEmails.length, "Inválidos:", invalidEmails.length);
+    console.error("[VALIDATE] Validación completada. Válidos:", validEmails.length, "Inválidos:", invalidEmails.length);
+    console.error("[VALIDATE] ===== FIN DE VALIDACIÓN EXITOSA =====");
     return NextResponse.json(response);
   } catch (error: any) {
     console.error("[VALIDATE ERROR] Error completo:", error);
