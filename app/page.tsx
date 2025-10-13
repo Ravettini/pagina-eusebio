@@ -54,8 +54,26 @@ export default function HomePage() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Error procesando el archivo");
+        let errorMsg = "Error procesando el archivo";
+        
+        // Obtener el texto de la respuesta primero
+        const responseText = await response.text();
+        
+        // Intentar parsearlo como JSON
+        try {
+          const errorData = JSON.parse(responseText);
+          errorMsg = errorData.error || errorMsg;
+        } catch {
+          // Si no es JSON, usar el texto directo
+          if (response.status === 413 || responseText.includes("too large")) {
+            errorMsg = "El archivo es demasiado grande. Máximo: 10MB";
+          } else if (responseText.includes("Internal Error") || response.status === 500) {
+            errorMsg = "Error interno del servidor. Por favor, intentá de nuevo o probá con otro archivo.";
+          } else {
+            errorMsg = responseText.substring(0, 100) || errorMsg;
+          }
+        }
+        throw new Error(errorMsg);
       }
 
       const data: ValidationResult = await response.json();
