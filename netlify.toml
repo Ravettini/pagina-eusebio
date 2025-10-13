@@ -5,3 +5,13 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
+[functions]
+  # Configuración para funciones serverless
+  external_node_modules = ["xlsx"]
+  node_bundler = "esbuild"
+
+# Variables de entorno por defecto
+[context.production.environment]
+  ENABLE_MX_CHECK = "false"
+  MAX_FILE_SIZE = "10485760"
+
