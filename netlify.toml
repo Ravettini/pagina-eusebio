@@ -9,9 +9,20 @@
   # Configuración para funciones serverless
   external_node_modules = ["xlsx"]
   node_bundler = "esbuild"
+  # Aumentar timeout y memoria para archivos grandes
+  timeout = 30
+
+# Configuración para archivos grandes
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    # Permitir archivos hasta 50MB
+    X-Netlify-Allow-Body = "true"
 
 # Variables de entorno por defecto
 [context.production.environment]
   ENABLE_MX_CHECK = "false"
   MAX_FILE_SIZE = "10485760"
+  # Aumentar límites de Netlify
+  NETLIFY_FUNCTIONS_TIMEOUT = "30"
 
