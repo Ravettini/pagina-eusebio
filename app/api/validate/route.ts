@@ -177,10 +177,20 @@ export async function POST(req: NextRequest) {
     console.error("[VALIDATE ERROR] Stack:", error?.stack);
     console.error("[VALIDATE ERROR] Mensaje:", error?.message);
     console.error("[VALIDATE ERROR] Código:", error?.code);
-    return NextResponse.json(
-      { error: `Error procesando el archivo: ${error.message || "Error desconocido"}` },
-      { status: 500 }
-    );
+    
+    // Devolver información detallada del error para debugging
+    const errorDetails = {
+      error: `Error procesando el archivo: ${error.message || "Error desconocido"}`,
+      details: {
+        message: error.message,
+        code: error.code,
+        stack: error.stack,
+        name: error.name,
+        timestamp: new Date().toISOString()
+      }
+    };
+    
+    return NextResponse.json(errorDetails, { status: 500 });
   }
 }
 
