@@ -99,42 +99,83 @@ export default function HomePage() {
     if (!result) return;
 
     try {
-      const response = await fetch("/api/export", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          valid: result.valid,
-          invalid: result.invalid,
-          format,
-          type,
-        }),
-      });
+      // Exportar en el frontend para evitar límites de Netlify
+      console.log("Exportando en el frontend...");
+      
+      let dataToExport: any[] = [];
+      let filename = "";
 
-      if (!response.ok) {
-        throw new Error("Error exportando el archivo");
+      if (type === "valid") {
+        dataToExport = result.valid.map(item => ({ email: item.email }));
+        filename = "emails_validos";
+      } else if (type === "invalid") {
+        dataToExport = result.invalid.map(item => ({ email: item.email, motivo: item.motivo }));
+        filename = "emails_invalidos";
+      } else {
+        dataToExport = [
+          ...result.valid.map(item => ({ email: item.email, estado: "Válido" })),
+          ...result.invalid.map(item => ({ email: item.email, estado: "Inválido", motivo: item.motivo }))
+        ];
+        filename = "resultado_validacion_completo";
       }
 
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
+      if (format === "csv") {
+        // Exportar CSV en el frontend
+        const csvContent = exportToCSV(dataToExport);
+        downloadFile(csvContent, `${filename}.csv`, "text/csv");
+      } else {
+        // Exportar XLSX en el frontend
+        await exportToXLSX(dataToExport, `${filename}.xlsx`);
+      }
 
-      const timestamp = new Date().toISOString().split("T")[0].replace(/-/g, "");
-      const filename =
-        type === "both"
-          ? `resultado_validacion_${timestamp}.${format}`
-          : type === "valid"
-            ? `validos_${timestamp}.${format}`
-            : `invalidos_${timestamp}.${format}`;
-
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
     } catch (err: any) {
       alert(`Error exportando: ${err.message}`);
     }
+  };
+
+  const exportToCSV = (data: any[]) => {
+    if (data.length === 0) return "";
+    
+    const headers = Object.keys(data[0]);
+    const csvRows = [
+      headers.join(","),
+      ...data.map(row => headers.map(header => `"${row[header] || ""}"`).join(","))
+    ];
+    
+    return csvRows.join("\n");
+  };
+
+  const downloadFile = (content: string, filename: string, mimeType: string) => {
+    const blob = new Blob([content], { type: mimeType });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  };
+
+  const exportToXLSX = async (data: any[], filename: string) => {
+    // Importar xlsx dinámicamente
+    const XLSX = await import("xlsx");
+    
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Resultados");
+    
+    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    const blob = new Blob([excelBuffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
   };
 
   return (
