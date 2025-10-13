@@ -31,9 +31,12 @@ interface ValidationResponse {
 
 export async function POST(req: NextRequest) {
   try {
+    console.log("[VALIDATE] Inicio de validación");
     const formData = await req.formData();
+    console.log("[VALIDATE] FormData recibido");
     const file = formData.get("file") as File;
     const paramsStr = formData.get("params") as string;
+    console.log("[VALIDATE] Archivo:", file?.name, "Tamaño:", file?.size);
 
     // Validar archivo
     if (!file) {
@@ -69,8 +72,11 @@ export async function POST(req: NextRequest) {
     const params: ValidationParams = paramsStr ? JSON.parse(paramsStr) : {};
 
     // Leer archivo
+    console.log("[VALIDATE] Leyendo archivo...");
     const buffer = await file.arrayBuffer();
+    console.log("[VALIDATE] Buffer creado, tamaño:", buffer.byteLength);
     const workbook = XLSX.read(buffer, { type: "array" });
+    console.log("[VALIDATE] Workbook leído, hojas:", workbook.SheetNames.length);
 
     // Obtener la primera hoja
     const firstSheetName = workbook.SheetNames[0];
@@ -87,7 +93,9 @@ export async function POST(req: NextRequest) {
     }
 
     // Extraer emails
+    console.log("[VALIDATE] Extrayendo emails de", rawData.length, "filas");
     const rawEmails = extractEmailColumn(rawData);
+    console.log("[VALIDATE] Emails extraídos:", rawEmails.length);
 
     if (rawEmails.length === 0) {
       return NextResponse.json(
@@ -159,11 +167,15 @@ export async function POST(req: NextRequest) {
       duplicatesRemoved,
     };
 
+    console.log("[VALIDATE] Validación completada. Válidos:", validEmails.length, "Inválidos:", invalidEmails.length);
     return NextResponse.json(response);
   } catch (error: any) {
-    console.error("Error procesando archivo:", error);
+    console.error("[VALIDATE ERROR] Error completo:", error);
+    console.error("[VALIDATE ERROR] Stack:", error?.stack);
+    console.error("[VALIDATE ERROR] Mensaje:", error?.message);
+    console.error("[VALIDATE ERROR] Código:", error?.code);
     return NextResponse.json(
-      { error: `Error procesando el archivo: ${error.message}` },
+      { error: `Error procesando el archivo: ${error.message || "Error desconocido"}` },
       { status: 500 }
     );
   }
