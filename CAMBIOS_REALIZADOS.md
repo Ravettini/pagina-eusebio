@@ -6,6 +6,42 @@ Se han implementado **todas las mejoras solicitadas** en el Validador de Emails 
 
 ---
 
+## ✅ ÚLTIMOS CAMBIOS (Octubre 2025)
+
+### 🔧 Fix: Error 500 en /api/validate (Netlify)
+
+**Problema**: La aplicación generaba error 500 al validar emails en Netlify.
+
+**Causa**: Netlify no soporta el módulo `dns/promises` de Node.js en funciones serverless.
+
+**Solución implementada**:
+
+1. **lib/mx-validator.ts**:
+   - Cambiado a importación dinámica de `dns/promises`
+   - Manejo de errores para ambientes sin soporte DNS
+   - La validación continúa sin errores aunque MX no esté disponible
+
+2. **components/ui/input.tsx**:
+   - Corregido error de TypeScript (interfaz vacía)
+   - Cambiado de `interface` a `type alias`
+
+3. **components/validation-params.tsx**:
+   - **Ocultadas** opciones de "Verificar registro MX"
+   - **Ocultadas** opciones de "Antigüedad"
+   - Removido código no utilizado
+   - UI simplificada con solo 2 opciones principales:
+     - ✅ Permitir correos de rol
+     - ✅ Filtrar TLDs fuera del target
+
+4. **Documentación actualizada**:
+   - `DEPLOY_NETLIFY.md` con instrucciones específicas
+   - `SOLUCION_ERROR_500.md` con guía completa de solución
+   - Notas sobre limitaciones de Netlify
+
+**Estado**: ✅ **Resuelto y listo para deploy**
+
+---
+
 ## ✅ 1. Explicación de "Typo"
 
 ### ¿Qué es un typo en emails?

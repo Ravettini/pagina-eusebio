@@ -33,11 +33,13 @@ git push
 - **Build command**: `npm run build`
 - **Publish directory**: `.next`
 
-### Environment variables (si las necesitás):
+### Environment variables (IMPORTANTE):
 ```
 ENABLE_MX_CHECK=false
 MAX_FILE_SIZE=10485760
 ```
+
+**NOTA IMPORTANTE**: La verificación MX (`ENABLE_MX_CHECK`) **debe estar en `false`** en Netlify porque las funciones serverless de Netlify no soportan el módulo `dns` de Node.js. Si está habilitada, recibirás errores 500 en `/api/validate`.
 
 ### Plugins:
 - ✅ `@netlify/plugin-nextjs` (ya configurado en netlify.toml)

@@ -1,8 +1,7 @@
 /**
  * Validación de registros MX (para ejecutar en servidor)
+ * NOTA: No disponible en Netlify serverless functions
  */
-
-import { resolveMx } from "dns/promises";
 
 export interface MXValidationResult {
   hasMX: boolean;
@@ -11,15 +10,23 @@ export interface MXValidationResult {
 
 /**
  * Verifica si un dominio tiene registros MX válidos
+ * Retorna error en ambientes que no soporten dns/promises (como Netlify)
  */
 export async function checkMXRecords(domain: string): Promise<MXValidationResult> {
   try {
-    const addresses = await resolveMx(domain);
+    // Intentar importar dinámicamente dns/promises
+    // Esto fallará en Netlify y otros ambientes serverless
+    const dns = await import("dns/promises");
+    const addresses = await dns.resolveMx(domain);
     return { hasMX: addresses && addresses.length > 0 };
   } catch (error: any) {
     // Si no hay registros MX o el dominio no existe
     if (error.code === "ENOTFOUND" || error.code === "ENODATA") {
       return { hasMX: false };
+    }
+    // Si el módulo no está disponible (Netlify, etc.)
+    if (error.code === "MODULE_NOT_FOUND" || error.message?.includes("dns")) {
+      return { hasMX: false, error: "MX check no disponible en este entorno" };
     }
     // Otros errores (timeout, etc.)
     return { hasMX: false, error: error.message };

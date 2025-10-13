@@ -16,8 +16,6 @@ interface ValidationParamsProps {
 }
 
 export function ValidationParams({ params, onChange }: ValidationParamsProps) {
-  const mxEnabled = process.env.NEXT_PUBLIC_ENABLE_MX_CHECK === "true";
-
   return (
     <Card>
       <CardHeader>
@@ -53,41 +51,6 @@ export function ValidationParams({ params, onChange }: ValidationParamsProps) {
             id="filter-tlds"
             checked={params.filterNonTargetTLDs}
             onCheckedChange={(checked) => onChange({ ...params, filterNonTargetTLDs: checked })}
-          />
-        </div>
-
-        <div className="flex items-center justify-between space-x-2">
-          <Label
-            htmlFor="check-mx"
-            className={`flex flex-col gap-1 ${!mxEnabled ? "opacity-50" : ""}`}
-          >
-            <span className="font-medium">Verificar registro MX</span>
-            <span className="text-xs font-normal text-muted-foreground">
-              {mxEnabled
-                ? "Validar que el dominio tenga servidor de correo"
-                : "Deshabilitado (requiere configuración del servidor)"}
-            </span>
-          </Label>
-          <Switch
-            id="check-mx"
-            checked={params.checkMX && mxEnabled}
-            onCheckedChange={(checked) => onChange({ ...params, checkMX: checked })}
-            disabled={!mxEnabled}
-          />
-        </div>
-
-        <div className="flex items-center justify-between space-x-2">
-          <Label htmlFor="check-antiquity" className="flex flex-col gap-1 opacity-50">
-            <span className="font-medium">Considerar antigüedad</span>
-            <span className="text-xs font-normal text-muted-foreground">
-              Informativo: marcar emails con más de 12 meses
-            </span>
-          </Label>
-          <Switch
-            id="check-antiquity"
-            checked={params.checkAntiquity}
-            onCheckedChange={(checked) => onChange({ ...params, checkAntiquity: checked })}
-            disabled={true}
           />
         </div>
       </CardContent>
