@@ -78,10 +78,10 @@ export async function POST(req: NextRequest) {
 
     // Tomar solo las primeras 1000 filas si el archivo es muy grande
     const limitedData = rawData.slice(0, 1001); // 1 header + 1000 filas
-    const processedData = limitedData.slice(1).map(row => {
+    const processedData = limitedData.slice(1).map((row: any) => {
       const obj: any = {};
-      if (limitedData[0]) {
-        limitedData[0].forEach((header: any, index: number) => {
+      if (limitedData[0] && Array.isArray(limitedData[0])) {
+        (limitedData[0] as any[]).forEach((header: any, index: number) => {
           obj[header] = row[index] || "";
         });
       }
