@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { processFileInFrontend } from "@/lib/file-processor";
 
 interface ValidationResult {
   valid: Array<{ email: string }>;
@@ -44,17 +45,22 @@ export default function HomePage() {
     setError(null);
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("params", JSON.stringify(params));
-
-      // Usar endpoint diferente según el tamaño del archivo
-      const endpoint = file.size > 6 * 1024 * 1024 ? "/api/validate-large" : "/api/validate";
-      console.log("Usando endpoint:", endpoint, "para archivo de", file.size, "bytes");
+      // Procesar archivo en el frontend para evitar límites de Netlify
+      console.log("Procesando archivo en el frontend...");
+      const processingResult = await processFileInFrontend(file);
       
-      const response = await fetch(endpoint, {
+      console.log(`Archivo procesado: ${processingResult.processedRows} emails de ${processingResult.totalRows} filas`);
+      
+      // Enviar solo los emails extraídos al servidor
+      const response = await fetch("/api/validate-data", {
         method: "POST",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          emails: processingResult.emails,
+          params: params
+        }),
       });
 
       if (!response.ok) {
