@@ -48,7 +48,11 @@ export default function HomePage() {
       formData.append("file", file);
       formData.append("params", JSON.stringify(params));
 
-      const response = await fetch("/api/validate", {
+      // Usar endpoint diferente según el tamaño del archivo
+      const endpoint = file.size > 6 * 1024 * 1024 ? "/api/validate-large" : "/api/validate";
+      console.log("Usando endpoint:", endpoint, "para archivo de", file.size, "bytes");
+      
+      const response = await fetch(endpoint, {
         method: "POST",
         body: formData,
       });

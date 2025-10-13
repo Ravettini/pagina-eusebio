@@ -51,11 +51,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No se recibió ningún archivo" }, { status: 400 });
     }
 
-    // Validar tamaño
-    if (file.size > MAX_FILE_SIZE) {
+    // Validar tamaño - límite más conservador para Netlify
+    const NETLIFY_LIMIT = 6 * 1024 * 1024; // 6MB límite de Netlify
+    if (file.size > NETLIFY_LIMIT) {
       return NextResponse.json(
-        { error: `El archivo excede el tamaño máximo permitido (${MAX_FILE_SIZE / 1024 / 1024}MB)` },
-        { status: 400 }
+        { 
+          error: `El archivo es demasiado grande para procesar en Netlify. Tamaño actual: ${(file.size / 1024 / 1024).toFixed(2)}MB. Límite: ${NETLIFY_LIMIT / 1024 / 1024}MB`,
+          details: {
+            fileSize: file.size,
+            limit: NETLIFY_LIMIT,
+            suggestion: "Por favor, divide tu archivo en archivos más pequeños o usa un archivo CSV en lugar de Excel"
+          }
+        },
+        { status: 413 }
       );
     }
 
