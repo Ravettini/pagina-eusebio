@@ -76,12 +76,11 @@ export async function POST(req: NextRequest) {
       raw: false
     });
 
-    // Tomar solo las primeras 10000 filas si el archivo es muy grande
-    const limitedData = rawData.slice(0, 10001); // 1 header + 10000 filas
-    const processedData = limitedData.slice(1).map((row: any) => {
+    // Procesar todas las filas sin límite
+    const processedData = rawData.slice(1).map((row: any) => {
       const obj: any = {};
-      if (limitedData[0] && Array.isArray(limitedData[0])) {
-        (limitedData[0] as any[]).forEach((header: any, index: number) => {
+      if (rawData[0] && Array.isArray(rawData[0])) {
+        (rawData[0] as any[]).forEach((header: any, index: number) => {
           obj[header] = row[index] || "";
         });
       }

@@ -41,13 +41,11 @@ export async function processFileInFrontend(file: File): Promise<FileProcessingR
         // Extraer emails
         const emails = extractEmailColumn(rawData);
         
-        // Limitar a 10000 emails para manejar archivos grandes sin problemas de rendimiento
-        const limitedEmails = emails.slice(0, 10000);
-
+        // Procesar todos los emails sin límite
         resolve({
-          emails: limitedEmails,
+          emails: emails,
           totalRows: rawData.length,
-          processedRows: limitedEmails.length
+          processedRows: emails.length
         });
 
       } catch (error) {
