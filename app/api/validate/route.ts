@@ -7,7 +7,6 @@ import {
   extractEmailColumn,
   type ValidationParams,
 } from "@/lib/email-validator";
-import { checkMultipleMX } from "@/lib/mx-validator";
 
 // Forzar Node.js runtime (no Edge)
 export const runtime = "nodejs";
@@ -122,26 +121,35 @@ export async function POST(req: NextRequest) {
     }
 
     // Si está habilitado el chequeo MX, procesar
+    // NOTA: Esta funcionalidad está deshabilitada en Netlify (no soporta dns/promises)
     if (params.checkMX && process.env.ENABLE_MX_CHECK === "true") {
-      // Extraer dominios únicos de los emails válidos
-      const domains = new Set(validEmails.map((v) => v.email.split("@")[1]));
-      const mxResults = await checkMultipleMX(Array.from(domains), 5000);
+      try {
+        // Importación dinámica para evitar errores en Netlify
+        const { checkMultipleMX } = await import("@/lib/mx-validator");
+        
+        // Extraer dominios únicos de los emails válidos
+        const domains = new Set(validEmails.map((v) => v.email.split("@")[1]));
+        const mxResults = await checkMultipleMX(Array.from(domains), 5000);
 
-      // Re-validar considerando MX
-      const newValid: ValidEmail[] = [];
-      for (const validEmail of validEmails) {
-        const domain = validEmail.email.split("@")[1];
-        const mxResult = mxResults.get(domain);
+        // Re-validar considerando MX
+        const newValid: ValidEmail[] = [];
+        for (const validEmail of validEmails) {
+          const domain = validEmail.email.split("@")[1];
+          const mxResult = mxResults.get(domain);
 
-        if (mxResult && !mxResult.hasMX) {
-          invalidEmails.push({ email: validEmail.email, motivo: "Sin registro MX" });
-        } else {
-          newValid.push(validEmail);
+          if (mxResult && !mxResult.hasMX) {
+            invalidEmails.push({ email: validEmail.email, motivo: "Sin registro MX" });
+          } else {
+            newValid.push(validEmail);
+          }
         }
-      }
 
-      validEmails.length = 0;
-      validEmails.push(...newValid);
+        validEmails.length = 0;
+        validEmails.push(...newValid);
+      } catch (error) {
+        // Si falla la verificación MX (por ejemplo, en Netlify), continuar sin ella
+        console.warn("MX check no disponible en este entorno:", error);
+      }
     }
 
     const response: ValidationResponse = {
