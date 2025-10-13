@@ -32,13 +32,19 @@ interface ValidationResponse {
 export async function POST(req: NextRequest) {
   console.error("[VALIDATE] ===== INICIO DE VALIDACIÓN =====");
   console.error("[VALIDATE] Timestamp:", new Date().toISOString());
+  console.error("[VALIDATE] Content-Type:", req.headers.get("content-type"));
+  console.error("[VALIDATE] Content-Length:", req.headers.get("content-length"));
   
   try {
     const formData = await req.formData();
     console.error("[VALIDATE] FormData recibido");
+    console.error("[VALIDATE] FormData keys:", Array.from(formData.keys()));
+    console.error("[VALIDATE] FormData entries:", Array.from(formData.entries()).map(([key, value]) => [key, value instanceof File ? `File: ${value.name} (${value.size} bytes)` : value]));
+    
     const file = formData.get("file") as File;
     const paramsStr = formData.get("params") as string;
-    console.error("[VALIDATE] Archivo:", file?.name, "Tamaño:", file?.size);
+    console.error("[VALIDATE] Archivo:", file?.name, "Tamaño:", file?.size, "Tipo:", file?.type);
+    console.error("[VALIDATE] Params string:", paramsStr);
 
     // Validar archivo
     if (!file) {
