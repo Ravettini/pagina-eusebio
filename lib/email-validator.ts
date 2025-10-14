@@ -185,6 +185,19 @@ export function validateEmail(
     return { isValid: false, reason: "Sólo números antes de @ (Doppler)" };
   }
 
+  // C2. Doppler: Patrones sospechosos - emails aleatorios o generados
+  // Emails que parecen aleatorios (muchas consonantes seguidas, sin vocales, etc.)
+  const suspiciousPatterns = [
+    /^[a-z]{4,}$/i, // Solo letras iguales o muy repetitivas: aaaa@, bbbb@
+    /^(test|prueba|ejemplo|example|sample|demo|fake|false|temp|temporal|basura|spam)[0-9]*$/i, // Emails de prueba
+    /^[0-9]{4,8}$/,  // Muchos números seguidos (ya cubierto arriba pero refinado)
+    /^(asdf|qwerty|abc|xyz|aaa|bbb|ccc|ddd|xxx|zzz)[0-9]*$/i, // Patrones de teclado
+  ];
+
+  if (suspiciousPatterns.some(pattern => pattern.test(localPart))) {
+    return { isValid: false, reason: "Patrón sospechoso o email de prueba (Doppler)" };
+  }
+
   // D. Typos/errores evidentes en dominio
   const domainLower = domainPart.toLowerCase();
 
@@ -202,6 +215,31 @@ export function validateEmail(
   // Verificar que tenga al menos un punto en el dominio
   if (!domainPart.includes(".")) {
     return { isValid: false, reason: "Dominio sin TLD" };
+  }
+
+  // D2. Doppler: Dominios sospechosos o temporales
+  const suspiciousDomains = [
+    "tempmail", "temp-mail", "10minutemail", "guerrillamail", "mailinator",
+    "throwaway", "trashmail", "fakeinbox", "maildrop", "yopmail",
+    "sharklasers", "guerrillamail", "grr.la", "spam4.me", "dispostable"
+  ];
+
+  if (suspiciousDomains.some(domain => domainLower.includes(domain))) {
+    return { isValid: false, reason: "Dominio temporal o desechable (Doppler)" };
+  }
+
+  // D3. Verificar que el dominio no empiece o termine con guión
+  const domainParts = domainPart.split(".");
+  for (const part of domainParts) {
+    if (part.startsWith("-") || part.endsWith("-")) {
+      return { isValid: false, reason: "Dominio con guiones mal posicionados" };
+    }
+  }
+
+  // D4. Verificar que el TLD sea válido (al menos 2 caracteres)
+  const tld = domainParts[domainParts.length - 1];
+  if (tld.length < 2) {
+    return { isValid: false, reason: "TLD demasiado corto" };
   }
 
   // E. Doppler: Correos genéricos de rol (si no están permitidos)
