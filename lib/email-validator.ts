@@ -58,21 +58,37 @@ const DOMAIN_TYPOS = [
 // TLDs inválidos comunes
 const INVALID_TLDS = [".con", ".comm", ".cpm", ".cm", ".om"];
 
-// TLDs de países objetivo (Argentina y regionalmente relevantes)
+// TLDs de países objetivo (Latinoamérica según Doppler)
 const TARGET_TLDS = [
+  // Argentina
   ".ar",
   ".com.ar",
   ".gob.ar",
   ".gov.ar",
+  ".edu.ar",
+  // Latinoamérica
+  ".mx", ".com.mx", ".gob.mx", // México
+  ".co", ".com.co", ".gov.co", // Colombia
+  ".cl", ".com.cl", ".gob.cl", // Chile
+  ".pe", ".com.pe", ".gob.pe", // Perú
+  ".br", ".com.br", ".gov.br", // Brasil
+  ".uy", ".com.uy", ".gub.uy", // Uruguay
+  ".py", ".com.py", ".gov.py", // Paraguay
+  ".bo", ".com.bo", ".gov.bo", // Bolivia
+  ".ec", ".com.ec", ".gov.ec", // Ecuador
+  ".ve", ".com.ve", ".gov.ve", // Venezuela
+  ".cr", ".com.cr", ".gov.cr", // Costa Rica
+  ".gt", ".com.gt", ".gov.gt", // Guatemala
+  ".hn", ".com.hn", ".gov.hn", // Honduras
+  ".ni", ".com.ni", ".gov.ni", // Nicaragua
+  ".pa", ".com.pa", ".gov.pa", // Panamá
+  ".sv", ".com.sv", ".gov.sv", // El Salvador
+  ".do", ".com.do", ".gov.do", // República Dominicana
+  // TLDs globales
   ".com",
   ".net",
   ".org",
   ".edu",
-  ".edu.ar",
-  ".uy",
-  ".cl",
-  ".br",
-  ".py",
 ];
 
 // Dominios siempre válidos (whitelist)
@@ -159,14 +175,14 @@ export function validateEmail(
     return { isValid: true };
   }
 
-  // B. Mínimo 4 caracteres antes de "@"
+  // B. Doppler: Mínimo 4 caracteres antes de "@"
   if (localPart.length < 4) {
-    return { isValid: false, reason: "Menos de 4 caracteres antes de @" };
+    return { isValid: false, reason: "Menos de 4 caracteres antes de @ (Doppler)" };
   }
 
-  // C. Local-part no sólo numérico
+  // C. Doppler: Local-part no sólo numérico
   if (/^\d+$/.test(localPart)) {
-    return { isValid: false, reason: "Sólo números antes de @" };
+    return { isValid: false, reason: "Sólo números antes de @ (Doppler)" };
   }
 
   // D. Typos/errores evidentes en dominio
@@ -188,19 +204,19 @@ export function validateEmail(
     return { isValid: false, reason: "Dominio sin TLD" };
   }
 
-  // E. Correos genéricos de rol (si no están permitidos)
+  // E. Doppler: Correos genéricos de rol (si no están permitidos)
   if (!allowRoleEmails) {
     const localLower = localPart.toLowerCase();
     if (ROLE_EMAIL_PREFIXES.some((prefix) => localLower === prefix || localLower.startsWith(`${prefix}.`))) {
-      return { isValid: false, reason: "Correo de rol (genérico)" };
+      return { isValid: false, reason: "Correo de rol (genérico) - Doppler" };
     }
   }
 
-  // F. Filtro geográfico (TLDs)
+  // F. Doppler: Filtro geográfico (TLDs de Latinoamérica)
   if (filterNonTargetTLDs) {
     const hasTargetTLD = targetTLDs.some((tld) => domainLower.endsWith(tld));
     if (!hasTargetTLD) {
-      return { isValid: false, reason: "TLD fuera del target geográfico" };
+      return { isValid: false, reason: "TLD fuera de Latinoamérica (Doppler)" };
     }
   }
 

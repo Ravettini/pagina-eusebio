@@ -106,15 +106,34 @@ export default function HomePage() {
       let filename = "";
 
       if (type === "valid") {
-        dataToExport = result.valid.map(item => ({ email: item.email }));
+        dataToExport = result.valid.map(item => ({ 
+          email: item.email,
+          estado: "Válido",
+          fecha_validacion: new Date().toLocaleDateString("es-AR")
+        }));
         filename = "emails_validos";
       } else if (type === "invalid") {
-        dataToExport = result.invalid.map(item => ({ email: item.email, motivo: item.motivo }));
+        dataToExport = result.invalid.map(item => ({ 
+          email: item.email, 
+          motivo: item.motivo,
+          estado: "Inválido",
+          fecha_validacion: new Date().toLocaleDateString("es-AR")
+        }));
         filename = "emails_invalidos";
       } else {
         dataToExport = [
-          ...result.valid.map(item => ({ email: item.email, estado: "Válido" })),
-          ...result.invalid.map(item => ({ email: item.email, estado: "Inválido", motivo: item.motivo }))
+          ...result.valid.map(item => ({ 
+            email: item.email, 
+            estado: "Válido",
+            motivo: "",
+            fecha_validacion: new Date().toLocaleDateString("es-AR")
+          })),
+          ...result.invalid.map(item => ({ 
+            email: item.email, 
+            estado: "Inválido", 
+            motivo: item.motivo,
+            fecha_validacion: new Date().toLocaleDateString("es-AR")
+          }))
         ];
         filename = "resultado_validacion_completo";
       }

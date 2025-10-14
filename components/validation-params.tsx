@@ -30,7 +30,7 @@ export function ValidationParams({ params, onChange }: ValidationParamsProps) {
           <Label htmlFor="allow-roles" className="flex flex-col gap-1">
             <span className="font-medium">Permitir correos de rol</span>
             <span className="text-xs font-normal text-muted-foreground">
-              Incluir emails como info@, ventas@, contacto@
+              Incluir emails como info@, ventas@, contacto@ (Doppler recomienda evitarlos)
             </span>
           </Label>
           <Switch
@@ -42,9 +42,9 @@ export function ValidationParams({ params, onChange }: ValidationParamsProps) {
 
         <div className="flex items-center justify-between space-x-2">
           <Label htmlFor="filter-tlds" className="flex flex-col gap-1">
-            <span className="font-medium">Filtrar TLDs fuera del target</span>
+            <span className="font-medium">Solo Latinoamérica</span>
             <span className="text-xs font-normal text-muted-foreground">
-              Sólo permitir dominios .ar, .com, .net, etc.
+              Filtrar emails fuera de Latinoamérica (.ar, .mx, .co, .cl, etc.)
             </span>
           </Label>
           <Switch
