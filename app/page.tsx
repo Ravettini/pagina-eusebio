@@ -29,6 +29,8 @@ export default function HomePage() {
     checkAntiquity: false,
   });
   const [result, setResult] = useState<ValidationResult | null>(null);
+  const [originalData, setOriginalData] = useState<any[]>([]);
+  const [emailColumnName, setEmailColumnName] = useState<string>("email");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -86,12 +88,83 @@ export default function HomePage() {
         throw new Error(errorMsg);
       }
 
-      const data: ValidationResult = await response.json();
-      setResult(data);
+          const data: ValidationResult = await response.json();
+          setResult(data);
+          setOriginalData(processingResult.originalData);
+          setEmailColumnName(processingResult.emailColumnName);
     } catch (err: any) {
       setError(err.message || "Error desconocido");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleExportWithOriginalColumns = async (type: "valid" | "invalid" | "both", format: "xlsx" | "csv") => {
+    if (!result || !originalData.length) return;
+
+    try {
+      console.log("Exportando con columnas originales...");
+      
+      // Crear un mapa de emails válidos e inválidos para marcar los datos originales
+      const validEmails = new Set(result.valid.map(item => item.email));
+      const invalidEmails = new Map(result.invalid.map(item => [item.email, item.motivo]));
+      
+      let dataToExport: any[] = [];
+      let filename = "";
+
+      if (type === "valid") {
+        dataToExport = originalData.filter(row => {
+          const email = row[emailColumnName];
+          return email && validEmails.has(email);
+        }).map(row => ({
+          ...row,
+          estado_validacion: "Válido",
+          fecha_validacion: new Date().toLocaleDateString("es-AR")
+        }));
+        filename = "emails_validos_columnas_originales";
+      } else if (type === "invalid") {
+        dataToExport = originalData.filter(row => {
+          const email = row[emailColumnName];
+          return email && invalidEmails.has(email);
+        }).map(row => ({
+          ...row,
+          motivo_invalidez: invalidEmails.get(row[emailColumnName]),
+          estado_validacion: "Inválido",
+          fecha_validacion: new Date().toLocaleDateString("es-AR")
+        }));
+        filename = "emails_invalidos_columnas_originales";
+      } else {
+        dataToExport = originalData.map(row => {
+          const email = row[emailColumnName];
+          if (email && validEmails.has(email)) {
+            return {
+              ...row,
+              estado_validacion: "Válido",
+              motivo_invalidez: "",
+              fecha_validacion: new Date().toLocaleDateString("es-AR")
+            };
+          } else if (email && invalidEmails.has(email)) {
+            return {
+              ...row,
+              estado_validacion: "Inválido",
+              motivo_invalidez: invalidEmails.get(email),
+              fecha_validacion: new Date().toLocaleDateString("es-AR")
+            };
+          }
+          return null;
+        }).filter(row => row !== null);
+        filename = "resultado_completo_columnas_originales";
+      }
+
+      if (format === "csv") {
+        const csvContent = exportToCSV(dataToExport);
+        downloadFile(csvContent, `${filename}.csv`, "text/csv");
+      } else {
+        await exportToXLSX(dataToExport, `${filename}.xlsx`);
+      }
+
+    } catch (err: any) {
+      alert(`Error exportando con columnas originales: ${err.message}`);
     }
   };
 
@@ -316,6 +389,7 @@ export default function HomePage() {
                         type="valid"
                         data={result.valid}
                         onExport={(format) => handleExport("valid", format)}
+                        onExportWithOriginalColumns={(format) => handleExportWithOriginalColumns("valid", format)}
                       />
                     </TabsContent>
                     <TabsContent value="invalid">
@@ -323,6 +397,7 @@ export default function HomePage() {
                         type="invalid"
                         data={result.invalid}
                         onExport={(format) => handleExport("invalid", format)}
+                        onExportWithOriginalColumns={(format) => handleExportWithOriginalColumns("invalid", format)}
                       />
                     </TabsContent>
                   </Tabs>

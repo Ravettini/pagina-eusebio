@@ -10,9 +10,10 @@ interface DataTableProps {
   type: "valid" | "invalid";
   data: Array<{ email: string; motivo?: string }>;
   onExport: (format: "xlsx" | "csv") => void;
+  onExportWithOriginalColumns?: (format: "xlsx" | "csv") => void;
 }
 
-export function DataTable({ type, data, onExport }: DataTableProps) {
+export function DataTable({ type, data, onExport, onExportWithOriginalColumns }: DataTableProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 100;
@@ -49,7 +50,7 @@ export function DataTable({ type, data, onExport }: DataTableProps) {
             className="pl-10"
           />
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm" onClick={copyToClipboard}>
             <Copy className="mr-2 h-4 w-4" />
             Copiar
@@ -62,6 +63,18 @@ export function DataTable({ type, data, onExport }: DataTableProps) {
             <Download className="mr-2 h-4 w-4" />
             XLSX
           </Button>
+          {onExportWithOriginalColumns && (
+            <>
+              <Button variant="outline" size="sm" onClick={() => onExportWithOriginalColumns("csv")}>
+                <Download className="mr-2 h-4 w-4" />
+                CSV Original
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => onExportWithOriginalColumns("xlsx")}>
+                <Download className="mr-2 h-4 w-4" />
+                XLSX Original
+              </Button>
+            </>
+          )}
         </div>
       </div>
 

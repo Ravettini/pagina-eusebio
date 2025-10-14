@@ -8,6 +8,8 @@ export interface FileProcessingResult {
   emails: string[];
   totalRows: number;
   processedRows: number;
+  originalData: any[];
+  emailColumnName: string;
 }
 
 /**
@@ -38,14 +40,17 @@ export async function processFileInFrontend(file: File): Promise<FileProcessingR
           return;
         }
 
-        // Extraer emails
+        // Extraer emails y encontrar la columna de email
         const emails = extractEmailColumn(rawData);
+        const emailColumnName = findEmailColumnName(rawData);
         
         // Procesar todos los emails sin límite
         resolve({
           emails: emails,
           totalRows: rawData.length,
-          processedRows: emails.length
+          processedRows: emails.length,
+          originalData: rawData,
+          emailColumnName: emailColumnName
         });
 
       } catch (error) {
@@ -59,6 +64,29 @@ export async function processFileInFrontend(file: File): Promise<FileProcessingR
 
     reader.readAsArrayBuffer(file);
   });
+}
+
+// Función para encontrar el nombre de la columna de email
+function findEmailColumnName(data: any[]): string {
+  if (!data || data.length === 0) return "email";
+  
+  const firstRow = data[0];
+  const headers = Object.keys(firstRow);
+  
+  // Buscar columnas que contengan "email" o "correo"
+  const emailKeywords = ["email", "correo", "e-mail", "mail"];
+  
+  for (const header of headers) {
+    if (header && typeof header === "string") {
+      const headerLower = header.toLowerCase();
+      if (emailKeywords.some(keyword => headerLower.includes(keyword))) {
+        return header;
+      }
+    }
+  }
+  
+  // Si no encuentra ninguna, usar la primera columna o "email"
+  return headers[0] || "email";
 }
 
 /**
