@@ -166,10 +166,17 @@ export default function HomePage() {
       let dataToExport: any[] = [];
       let filename = "";
 
+      // Usar un Set para trackear emails ya exportados (evitar duplicados)
+      const exportedEmails = new Set<string>();
+
       if (type === "valid") {
         dataToExport = originalData.filter(row => {
           const email = row[emailColumnName];
-          return email && validEmails.has(email);
+          if (email && validEmails.has(email) && !exportedEmails.has(email)) {
+            exportedEmails.add(email);
+            return true;
+          }
+          return false;
         }).map(row => ({
           ...row,
           estado_validacion: "Válido",
@@ -179,7 +186,11 @@ export default function HomePage() {
       } else if (type === "invalid") {
         dataToExport = originalData.filter(row => {
           const email = row[emailColumnName];
-          return email && invalidEmails.has(email);
+          if (email && invalidEmails.has(email) && !exportedEmails.has(email)) {
+            exportedEmails.add(email);
+            return true;
+          }
+          return false;
         }).map(row => ({
           ...row,
           motivo_invalidez: invalidEmails.get(row[emailColumnName]),
@@ -190,14 +201,16 @@ export default function HomePage() {
       } else {
         dataToExport = originalData.map(row => {
           const email = row[emailColumnName];
-          if (email && validEmails.has(email)) {
+          if (email && validEmails.has(email) && !exportedEmails.has(email)) {
+            exportedEmails.add(email);
             return {
               ...row,
               estado_validacion: "Válido",
               motivo_invalidez: "",
               fecha_validacion: new Date().toLocaleDateString("es-AR")
             };
-          } else if (email && invalidEmails.has(email)) {
+          } else if (email && invalidEmails.has(email) && !exportedEmails.has(email)) {
+            exportedEmails.add(email);
             return {
               ...row,
               estado_validacion: "Inválido",
