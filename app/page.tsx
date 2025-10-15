@@ -8,7 +8,6 @@ import { FileUpload } from "@/components/file-upload";
 import { ValidationParams } from "@/components/validation-params";
 import { DataTable } from "@/components/data-table";
 import { LoginForm } from "@/components/login-form";
-import { DiagnosticTool } from "@/components/diagnostic-tool";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -368,21 +367,12 @@ export default function HomePage() {
             <h1 className="text-4xl font-bold text-gcba-blue">Validador de Emails</h1>
             <p className="mt-2 text-lg text-gcba-gray">
               Cargá tu lista de correos electrónicos y obtené un análisis detallado de su
-              validez
+              validez según los parámetros de Doppler
             </p>
             <p className="mt-1 text-sm text-gcba-cyan">
               Desarrollado por GO Observatorio y Datos
             </p>
           </div>
-
-          {/* Tabs principales */}
-          <Tabs defaultValue="validator" className="w-full">
-            <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
-              <TabsTrigger value="validator">Validador</TabsTrigger>
-              <TabsTrigger value="diagnostic">Diagnóstico</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="validator" className="space-y-6 mt-6">
 
           {error && (
             <Card className="border-destructive">
@@ -517,12 +507,6 @@ export default function HomePage() {
               </div>
             </div>
           )}
-            </TabsContent>
-
-            <TabsContent value="diagnostic" className="mt-6">
-              <DiagnosticTool />
-            </TabsContent>
-          </Tabs>
         </div>
       </main>
 
