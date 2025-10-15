@@ -99,6 +99,60 @@ export default function HomePage() {
     }
   };
 
+  const handleExportSplit = async (type: "valid" | "invalid", format: "xlsx" | "csv") => {
+    if (!result) return;
+
+    try {
+      console.log("Exportando archivos divididos en lotes de 20,000...");
+      
+      const CHUNK_SIZE = 20000;
+      let dataToSplit: any[] = [];
+      let baseFilename = "";
+
+      if (type === "valid") {
+        dataToSplit = result.valid.map(item => ({ 
+          email: item.email,
+          estado: "Válido",
+          fecha_validacion: new Date().toLocaleDateString("es-AR")
+        }));
+        baseFilename = "emails_validos";
+      } else {
+        dataToSplit = result.invalid.map(item => ({ 
+          email: item.email, 
+          motivo: item.motivo,
+          estado: "Inválido",
+          fecha_validacion: new Date().toLocaleDateString("es-AR")
+        }));
+        baseFilename = "emails_invalidos";
+      }
+
+      const totalChunks = Math.ceil(dataToSplit.length / CHUNK_SIZE);
+      
+      for (let i = 0; i < totalChunks; i++) {
+        const start = i * CHUNK_SIZE;
+        const end = start + CHUNK_SIZE;
+        const chunk = dataToSplit.slice(start, end);
+        
+        const filename = `${baseFilename}_parte_${i + 1}_de_${totalChunks}`;
+        
+        if (format === "csv") {
+          const csvContent = exportToCSV(chunk);
+          downloadFile(csvContent, `${filename}.csv`, "text/csv");
+        } else {
+          await exportToXLSX(chunk, `${filename}.xlsx`);
+        }
+        
+        // Pequeña pausa entre descargas para no sobrecargar el navegador
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+
+      alert(`Se descargaron ${totalChunks} archivos con éxito`);
+
+    } catch (err: any) {
+      alert(`Error exportando archivos divididos: ${err.message}`);
+    }
+  };
+
   const handleExportWithOriginalColumns = async (type: "valid" | "invalid" | "both", format: "xlsx" | "csv") => {
     if (!result || !originalData.length) return;
 
@@ -390,6 +444,7 @@ export default function HomePage() {
                         data={result.valid}
                         onExport={(format) => handleExport("valid", format)}
                         onExportWithOriginalColumns={(format) => handleExportWithOriginalColumns("valid", format)}
+                        onExportSplit={(format) => handleExportSplit("valid", format)}
                       />
                     </TabsContent>
                     <TabsContent value="invalid">
@@ -398,6 +453,7 @@ export default function HomePage() {
                         data={result.invalid}
                         onExport={(format) => handleExport("invalid", format)}
                         onExportWithOriginalColumns={(format) => handleExportWithOriginalColumns("invalid", format)}
+                        onExportSplit={(format) => handleExportSplit("invalid", format)}
                       />
                     </TabsContent>
                   </Tabs>

@@ -11,9 +11,10 @@ interface DataTableProps {
   data: Array<{ email: string; motivo?: string }>;
   onExport: (format: "xlsx" | "csv") => void;
   onExportWithOriginalColumns?: (format: "xlsx" | "csv") => void;
+  onExportSplit?: (format: "xlsx" | "csv") => void;
 }
 
-export function DataTable({ type, data, onExport, onExportWithOriginalColumns }: DataTableProps) {
+export function DataTable({ type, data, onExport, onExportWithOriginalColumns, onExportSplit }: DataTableProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 100;
@@ -72,6 +73,18 @@ export function DataTable({ type, data, onExport, onExportWithOriginalColumns }:
               <Button variant="outline" size="sm" onClick={() => onExportWithOriginalColumns("xlsx")}>
                 <Download className="mr-2 h-4 w-4" />
                 XLSX Original
+              </Button>
+            </>
+          )}
+          {onExportSplit && data.length > 20000 && (
+            <>
+              <Button variant="default" size="sm" onClick={() => onExportSplit("csv")}>
+                <Download className="mr-2 h-4 w-4" />
+                CSV Dividido (20k)
+              </Button>
+              <Button variant="default" size="sm" onClick={() => onExportSplit("xlsx")}>
+                <Download className="mr-2 h-4 w-4" />
+                XLSX Dividido (20k)
               </Button>
             </>
           )}
