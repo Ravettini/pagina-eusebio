@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { FileUpload } from "@/components/file-upload";
 import { ValidationParams } from "@/components/validation-params";
 import { DataTable } from "@/components/data-table";
+import { LoginForm } from "@/components/login-form";
+import { DiagnosticTool } from "@/components/diagnostic-tool";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -21,6 +23,7 @@ interface ValidationResult {
 }
 
 export default function HomePage() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [params, setParams] = useState({
     allowRoleEmails: false,
@@ -33,6 +36,19 @@ export default function HomePage() {
   const [emailColumnName, setEmailColumnName] = useState<string>("email");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Verificar autenticación al cargar
+  useEffect(() => {
+    const auth = localStorage.getItem("isAuthenticated");
+    if (auth === "true") {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleLogin = (username: string, password: string) => {
+    setIsAuthenticated(true);
+    localStorage.setItem("isAuthenticated", "true");
+  };
 
   const handleFileSelect = (selectedFile: File) => {
     setFile(selectedFile);
@@ -337,6 +353,11 @@ export default function HomePage() {
     document.body.removeChild(a);
   };
 
+  // Mostrar login si no está autenticado
+  if (!isAuthenticated) {
+    return <LoginForm onLogin={handleLogin} />;
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
@@ -353,6 +374,15 @@ export default function HomePage() {
               Desarrollado por GO Observatorio y Datos
             </p>
           </div>
+
+          {/* Tabs principales */}
+          <Tabs defaultValue="validator" className="w-full">
+            <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
+              <TabsTrigger value="validator">Validador</TabsTrigger>
+              <TabsTrigger value="diagnostic">Diagnóstico</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="validator" className="space-y-6 mt-6">
 
           {error && (
             <Card className="border-destructive">
@@ -487,6 +517,12 @@ export default function HomePage() {
               </div>
             </div>
           )}
+            </TabsContent>
+
+            <TabsContent value="diagnostic" className="mt-6">
+              <DiagnosticTool />
+            </TabsContent>
+          </Tabs>
         </div>
       </main>
 
