@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>V-Mail | Validación de Email Premium</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              black: '#050505',
+              navy: '#0a0f1e',
+              blue: '#0055ff',
+              cyan: '#00d4ff',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          borderRadius: {
+            'xl': '12px',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-glassmorphism">
+    .glass-card {
+      background: rgba(10, 15, 30, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .hero-gradient {
+      background: radial-gradient(circle at top center, rgba(0, 85, 255, 0.15) 0%, rgba(5, 5, 5, 0) 70%);
+    }
+    .glow-on-hover:hover {
+      box-shadow: 0 0 20px rgba(0, 85, 255, 0.3);
+    }
+  </style>
+</head>
+<body class="bg-brand-black text-slate-200 font-sans selection:bg-brand-blue/30 selection:text-white">
+<!-- BEGIN: Navigation -->
+<header class="sticky top-0 z-50 w-full border-b border-white/5 bg-brand-black/80 backdrop-blur-md">
+<nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 bg-brand-blue rounded-lg flex items-center justify-center">
+<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg>
+</div>
+<span class="text-xl font-bold tracking-tight text-white">V-Mail</span>
+</div>
+<div class="flex items-center gap-6">
+<a class="text-sm font-medium text-slate-400 hover:text-brand-cyan transition-colors" href="#">Soporte</a>
+<button class="bg-brand-blue hover:bg-brand-blue/90 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all">Acceso</button>
+</div>
+</nav>
+</header>
+<!-- END: Navigation -->
+<main>
+<!-- BEGIN: Hero Section -->
+<section class="hero-gradient pt-16 pb-12 px-4">
+<div class="max-w-4xl mx-auto text-center">
+<h1 class="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">
+          Validá tu base de emails <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-brand-cyan">en minutos</span>
+</h1>
+<p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+          Detectá correos inválidos, filtrá direcciones no deseadas y prepará listas más limpias para tus campañas.
+        </p>
+</div>
+</section>
+<!-- END: Hero Section -->
+<!-- BEGIN: Tool Section -->
+<section class="max-w-4xl mx-auto px-4 pb-24">
+<div class="grid gap-8">
+<!-- Uploader -->
+<div class="glass-card rounded-xl p-8 border-dashed border-2 border-brand-blue/30 hover:border-brand-blue/60 transition-all group flex flex-col items-center justify-center cursor-pointer" data-purpose="uploader-container">
+<div class="w-16 h-16 bg-brand-blue/10 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<svg class="w-8 h-8 text-brand-blue" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<h3 class="text-xl font-semibold text-white mb-2">Seleccionar archivo</h3>
+<p class="text-slate-400 text-sm mb-6">Arrastrá tus archivos aquí o explorá tu equipo</p>
+<button class="bg-brand-blue text-white px-8 py-3 rounded-xl font-semibold glow-on-hover transition-all">Seleccionar archivo</button>
+<p class="mt-4 text-xs text-slate-500 italic">Formatos admitidos: .xlsx, .csv (máx 10MB)</p>
+</div>
+<!-- Config Panel -->
+<div class="glass-card rounded-xl p-8 border border-white/5" data-purpose="config-panel">
+<h4 class="text-lg font-semibold text-white mb-6 flex items-center gap-2">
+<svg class="w-5 h-5 text-brand-cyan" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+            Configuración de limpieza
+          </h4>
+<div class="space-y-6">
+<!-- Switch 1 -->
+<div class="flex items-start justify-between">
+<div class="pr-4">
+<p class="font-medium text-slate-200">Incluir correos de rol</p>
+<p class="text-sm text-slate-500">Ejemplo: info@, ventas@, admin@</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-blue"></div>
+</label>
+</div>
+<hr class="border-white/5"/>
+<!-- Switch 2 -->
+<div class="flex items-start justify-between">
+<div class="pr-4">
+<p class="font-medium text-slate-200">Limitar a Latinoamérica</p>
+<p class="text-sm text-slate-500">Excluye dominios fuera de la región (.us, .eu, etc.)</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-blue"></div>
+</label>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Tool Section -->
+<!-- BEGIN: How It Works -->
+<section class="bg-brand-navy/30 py-24 border-y border-white/5">
+<div class="max-w-7xl mx-auto px-4">
+<h2 class="text-3xl font-bold text-white text-center mb-16">Proceso Simple</h2>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<!-- Step 1 -->
+<div class="text-center">
+<div class="w-12 h-12 bg-brand-blue/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-brand-blue/40 text-brand-cyan font-bold">1</div>
+<h5 class="text-white font-semibold mb-2">Subir</h5>
+<p class="text-slate-400 text-sm">Cargá tu archivo CSV o Excel.</p>
+</div>
+<!-- Step 2 -->
+<div class="text-center">
+<div class="w-12 h-12 bg-brand-blue/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-brand-blue/40 text-brand-cyan font-bold">2</div>
+<h5 class="text-white font-semibold mb-2">Configurar</h5>
+<p class="text-slate-400 text-sm">Elegí los filtros avanzados.</p>
+</div>
+<!-- Step 3 -->
+<div class="text-center">
+<div class="w-12 h-12 bg-brand-blue/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-brand-blue/40 text-brand-cyan font-bold">3</div>
+<h5 class="text-white font-semibold mb-2">Procesar</h5>
+<p class="text-slate-400 text-sm">Validamos cada dirección.</p>
+</div>
+<!-- Step 4 -->
+<div class="text-center">
+<div class="w-12 h-12 bg-brand-blue/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-brand-blue/40 text-brand-cyan font-bold">4</div>
+<h5 class="text-white font-semibold mb-2">Descargar</h5>
+<p class="text-slate-400 text-sm">Obtené tu lista optimizada.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- END: How It Works -->
+<!-- BEGIN: Benefits -->
+<section class="py-24 px-4 max-w-7xl mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Benefit 1 -->
+<div class="glass-card p-8 rounded-xl border border-white/5 hover:bg-brand-navy transition-colors">
+<div class="w-12 h-12 bg-brand-cyan/10 rounded-lg flex items-center justify-center mb-6">
+<svg class="w-6 h-6 text-brand-cyan" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<h4 class="text-xl font-bold text-white mb-3">Detecta inválidos</h4>
+<p class="text-slate-400 leading-relaxed">Identificamos correos con formato incorrecto, dominios inexistentes o servidores inactivos.</p>
+</div>
+<!-- Benefit 2 -->
+<div class="glass-card p-8 rounded-xl border border-white/5 hover:bg-brand-navy transition-colors">
+<div class="w-12 h-12 bg-brand-blue/10 rounded-lg flex items-center justify-center mb-6">
+<svg class="w-6 h-6 text-brand-blue" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<h4 class="text-xl font-bold text-white mb-3">Reduce rebotes</h4>
+<p class="text-slate-400 leading-relaxed">Evita que tus correos terminen en la carpeta de SPAM o sean rechazados por el servidor.</p>
+</div>
+<!-- Benefit 3 -->
+<div class="glass-card p-8 rounded-xl border border-white/5 hover:bg-brand-navy transition-colors">
+<div class="w-12 h-12 bg-brand-cyan/10 rounded-lg flex items-center justify-center mb-6">
+<svg class="w-6 h-6 text-brand-cyan" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<h4 class="text-xl font-bold text-white mb-3">Mejora entregabilidad</h4>
+<p class="text-slate-400 leading-relaxed">Asegura que tus comunicaciones lleguen a personas reales, potenciando el ROI de tus campañas.</p>
+</div>
+</div>
+</section>
+<!-- END: Benefits -->
+<!-- BEGIN: Dashboard Mockup -->
+<section class="pb-24 px-4 max-w-5xl mx-auto">
+<div class="glass-card rounded-2xl p-8 border border-white/10 shadow-2xl relative overflow-hidden" data-purpose="results-preview">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
+<div>
+<h3 class="text-2xl font-bold text-white">Vista previa del reporte</h3>
+<p class="text-slate-500">Resultados en tiempo real</p>
+</div>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-brand-blue/20 text-brand-cyan text-xs font-semibold rounded-full border border-brand-cyan/20">CSV Export</span>
+<span class="px-3 py-1 bg-white/5 text-slate-400 text-xs font-semibold rounded-full border border-white/10">PDF Summary</span>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+<!-- Metric 1 -->
+<div class="bg-white/5 rounded-xl p-6 border border-white/5">
+<p class="text-slate-400 text-sm mb-1 font-medium">Válidos</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold text-emerald-400">8,432</span>
+<span class="text-xs text-emerald-500/80">92.4%</span>
+</div>
+<div class="w-full bg-white/10 h-1.5 rounded-full mt-4">
+<div class="bg-emerald-400 h-1.5 rounded-full w-[92%]"></div>
+</div>
+</div>
+<!-- Metric 2 -->
+<div class="bg-white/5 rounded-xl p-6 border border-white/5">
+<p class="text-slate-400 text-sm mb-1 font-medium">Inválidos</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold text-rose-400">412</span>
+<span class="text-xs text-rose-500/80">4.5%</span>
+</div>
+<div class="w-full bg-white/10 h-1.5 rounded-full mt-4">
+<div class="bg-rose-400 h-1.5 rounded-full w-[15%]"></div>
+</div>
+</div>
+<!-- Metric 3 -->
+<div class="bg-white/5 rounded-xl p-6 border border-white/5">
+<p class="text-slate-400 text-sm mb-1 font-medium">Duplicados</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold text-amber-400">281</span>
+<span class="text-xs text-amber-500/80">3.1%</span>
+</div>
+<div class="w-full bg-white/10 h-1.5 rounded-full mt-4">
+<div class="bg-amber-400 h-1.5 rounded-full w-[10%]"></div>
+</div>
+</div>
+</div>
+<!-- Decorative background light -->
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-brand-blue/10 rounded-full blur-3xl pointer-events-none"></div>
+</div>
+</section>
+<!-- END: Dashboard Mockup -->
+</main>
+<!-- BEGIN: Footer -->
+<footer class="bg-brand-black border-t border-white/5 py-12 px-4">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 bg-brand-blue rounded flex items-center justify-center">
+<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg>
+</div>
+<span class="text-lg font-bold text-white tracking-tight">V-Mail</span>
+</div>
+<div class="text-slate-500 text-sm">
+        © 2024 V-Mail Validation. Todos los derechos reservados.
+      </div>
+<div class="flex gap-6">
+<a class="text-slate-500 hover:text-white transition-colors" href="#">Privacidad</a>
+<a class="text-slate-500 hover:text-white transition-colors" href="#">Términos</a>
+</div>
+</div>
+</footer>
+<!-- END: Footer -->
+</body></html>

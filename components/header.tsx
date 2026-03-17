@@ -1,45 +1,60 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import { useEffect, useState } from "react";
 
 export function Header() {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <header className="border-b bg-gcba-offwhite">
-      <div className="container mx-auto flex h-24 items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-4">
-          <div className="flex items-center justify-center">
-            <Image
-              src="/logo.jfif"
-              alt="Logo GO Observatorio y Datos"
-              width={80}
-              height={80}
-              className="h-20 w-20 object-contain"
-              priority
-            />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-gcba-blue">Validador de Emails</h1>
-            <p className="text-sm text-gcba-gray">GO Observatorio y Datos</p>
-          </div>
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-[#434655]/40 bg-[#353534]/80 backdrop-blur-xl shadow-[0px_24px_48px_rgba(0,0,0,0.5)] transition-[height,background,transform,padding] duration-300">
+      <nav
+        className={`mx-auto flex max-w-7xl items-center justify-between px-4 md:px-8 transition-[height,padding] duration-300 ${
+          isScrolled ? "h-14 md:h-16" : "h-16 md:h-20"
+        }`}
+      >
+        <Link
+          href="/"
+          className={`font-black tracking-tight text-white transition-[font-size] duration-300 ${
+            isScrolled ? "text-lg md:text-xl" : "text-xl md:text-2xl"
+          }`}
+        >
+          V-Mail
         </Link>
-        <nav className="flex gap-6">
-          <Link
-            href="/"
-            className="text-sm font-medium text-gcba-blue hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gcba-blue focus-visible:ring-offset-2"
+        <div className="hidden items-center gap-8 text-sm font-medium text-white md:flex">
+          <button
+            type="button"
+            className="border-b-2 border-[#b4c5ff] pb-1 text-[#b4c5ff]"
+            onClick={() => {
+              const el = document.getElementById("validator-section");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }}
           >
-            Validar Emails
-          </Link>
-          <Link
-            href="/guia"
-            className="text-sm font-medium text-gcba-blue hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gcba-blue focus-visible:ring-offset-2"
+            Features
+          </button>
+          <button
+            type="button"
+            className="transition-colors hover:text-white"
+            onClick={() => {
+              const el = document.getElementById("validator-section");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }}
           >
-            Guía
-          </Link>
-        </nav>
-      </div>
+            Cómo funciona
+          </button>
+        </div>
+      </nav>
     </header>
   );
 }
-
 

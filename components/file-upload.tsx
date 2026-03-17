@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -74,8 +73,8 @@ export function FileUpload({ onFileSelect, disabled }: FileUploadProps) {
   };
 
   return (
-    <Card className={dragActive ? "border-gcba-blue bg-gcba-cyan/10" : ""}>
-      <CardContent className="p-8">
+    <Card className={dragActive ? "border-[#2563eb] bg-[#131313]" : "border-0 bg-transparent"}>
+      <CardContent className="p-0">
         <div
           className="flex flex-col items-center justify-center gap-4"
           onDragEnter={handleDrag}
@@ -83,18 +82,6 @@ export function FileUpload({ onFileSelect, disabled }: FileUploadProps) {
           onDragOver={handleDrag}
           onDrop={handleDrop}
         >
-          <div className="rounded-full bg-gcba-cyan/20 p-6">
-            <Upload className="h-12 w-12 text-gcba-blue" />
-          </div>
-          <div className="text-center">
-            <p className="text-lg font-medium text-gcba-blue">
-              Arrastrá y soltá tu archivo
-            </p>
-            <p className="text-sm text-gcba-gray">o hacé clic para seleccionarlo</p>
-            <p className="mt-2 text-xs text-muted-foreground">
-              Archivos aceptados: .xlsx, .csv (máximo 10MB)
-            </p>
-          </div>
           <input
             ref={inputRef}
             type="file"
@@ -108,7 +95,7 @@ export function FileUpload({ onFileSelect, disabled }: FileUploadProps) {
             disabled={disabled}
             variant="default"
             size="lg"
-            className="mt-2"
+            className="mt-4 rounded-full bg-[#2563eb] px-6 text-sm font-semibold text-white hover:bg-[#1d4ed8]"
           >
             Seleccionar archivo
           </Button>

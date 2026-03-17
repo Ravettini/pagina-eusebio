@@ -40,7 +40,7 @@ export function DataTable({ type, data, onExport, onExportWithOriginalColumns, o
     <div className="space-y-4">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white" />
           <Input
             placeholder="Buscar email..."
             value={searchTerm}
@@ -48,29 +48,54 @@ export function DataTable({ type, data, onExport, onExportWithOriginalColumns, o
               setSearchTerm(e.target.value);
               setCurrentPage(1);
             }}
-            className="pl-10"
+            className="pl-10 bg-[#131313] text-white placeholder:text-white/60 border-[#434655]"
           />
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" onClick={copyToClipboard}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={copyToClipboard}
+            className="border-[#434655] bg-[#131313] text-white hover:bg-[#201f1f]"
+          >
             <Copy className="mr-2 h-4 w-4" />
             Copiar
           </Button>
-          <Button variant="outline" size="sm" onClick={() => onExport("csv")}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onExport("csv")}
+            className="border-[#434655] bg-[#131313] text-white hover:bg-[#201f1f]"
+          >
             <Download className="mr-2 h-4 w-4" />
             CSV
           </Button>
-          <Button variant="outline" size="sm" onClick={() => onExport("xlsx")}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onExport("xlsx")}
+            className="border-[#434655] bg-[#131313] text-white hover:bg-[#201f1f]"
+          >
             <Download className="mr-2 h-4 w-4" />
             XLSX
           </Button>
           {onExportWithOriginalColumns && (
             <>
-              <Button variant="outline" size="sm" onClick={() => onExportWithOriginalColumns("csv")}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onExportWithOriginalColumns("csv")}
+                className="border-[#434655] bg-[#131313] text-white hover:bg-[#201f1f]"
+              >
                 <Download className="mr-2 h-4 w-4" />
                 CSV Original
               </Button>
-              <Button variant="outline" size="sm" onClick={() => onExportWithOriginalColumns("xlsx")}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onExportWithOriginalColumns("xlsx")}
+                className="border-[#434655] bg-[#131313] text-white hover:bg-[#201f1f]"
+              >
                 <Download className="mr-2 h-4 w-4" />
                 XLSX Original
               </Button>
@@ -91,34 +116,43 @@ export function DataTable({ type, data, onExport, onExportWithOriginalColumns, o
         </div>
       </div>
 
-      <div className="rounded-lg border">
+      <div className="rounded-lg border border-[#434655] bg-[#131313]">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-muted/50">
+            <thead className="bg-[#201f1f]">
               <tr>
-                <th className="px-4 py-3 text-left text-sm font-medium">#</th>
-                <th className="px-4 py-3 text-left text-sm font-medium">Email</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-white">#</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-white">
+                  Email
+                </th>
                 {type === "invalid" && (
-                  <th className="px-4 py-3 text-left text-sm font-medium">Motivo</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-white">
+                    Motivo
+                  </th>
                 )}
               </tr>
             </thead>
-            <tbody className="divide-y">
+            <tbody className="divide-y divide-[#353534]">
               {currentData.length === 0 ? (
                 <tr>
-                  <td colSpan={type === "invalid" ? 3 : 2} className="px-4 py-8 text-center">
-                    <p className="text-sm text-muted-foreground">
+                  <td
+                    colSpan={type === "invalid" ? 3 : 2}
+                    className="px-4 py-8 text-center text-white"
+                  >
+                    <p className="text-sm">
                       {searchTerm ? "No se encontraron resultados" : "No hay datos"}
                     </p>
                   </td>
                 </tr>
               ) : (
                 currentData.map((item, index) => (
-                  <tr key={startIndex + index} className="hover:bg-muted/50">
-                    <td className="px-4 py-3 text-sm text-muted-foreground">
+                  <tr key={startIndex + index} className="hover:bg-[#201f1f]">
+                    <td className="px-4 py-3 text-sm text-white">
                       {startIndex + index + 1}
                     </td>
-                    <td className="px-4 py-3 text-sm font-mono">{item.email}</td>
+                    <td className="px-4 py-3 text-sm font-mono text-white">
+                      {item.email}
+                    </td>
                     {type === "invalid" && (
                       <td className="px-4 py-3">
                         <Badge variant="warning" className="text-xs">
@@ -136,7 +170,7 @@ export function DataTable({ type, data, onExport, onExportWithOriginalColumns, o
 
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-white">
             Mostrando {startIndex + 1} a {Math.min(endIndex, filteredData.length)} de{" "}
             {filteredData.length} resultados
           </p>
